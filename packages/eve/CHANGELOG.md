@@ -1,5 +1,18 @@
 # eve
 
+## 1.0.0-rc.4
+
+Released 2026-11-04 · [Compare with 1.0.0-rc.3](https://github.com/vercel/eve/compare/eve%401.0.0-rc.3...eve%401.0.0-rc.4)
+
+### Features
+
+- Add `EVE_EVAL_OIDC_TOKEN` to reach a protected Vercel deployment from `eve eval --url` through Trusted Sources. ([#4894](https://github.com/vercel/eve/pull/4894))
+- `webSearch({ provider: "tako" })` selects Tako Search through AI Gateway, which returns web pages and Tako data cards with their rows in one call. `"tako"` also works as a `fallback` for `webSearch({ provider: "native" })`. ([#5880](https://github.com/vercel/eve/pull/5880))
+
+### Bug Fixes
+
+- A prompt that OpenAI refuses for possible cybersecurity (`cyber_policy`) or biological (`bio_policy`) risk now fails only its turn instead of ending the session. ([#5772](https://github.com/vercel/eve/pull/5772))
+
 ## 1.0.0-rc.3
 
 Released 2026-11-03 · [Compare with 1.0.0-rc.2](https://github.com/vercel/eve/compare/eve%401.0.0-rc.2...eve%401.0.0-rc.3)
