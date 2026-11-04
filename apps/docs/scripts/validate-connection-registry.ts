@@ -49,6 +49,9 @@ const API_KEY_CONNECTIONS: Readonly<Record<string, readonly string[]>> = {
   firecrawl: ["FIRECRAWL_API_KEY"],
   waydock: ["WAYDOCK_MCP_KEY"],
 };
+// Connections that work without any credential. Optional keys are documented in the gallery
+// setup text only, so `registry_add` does not report them as missing.
+const KEYLESS_CONNECTIONS: ReadonlySet<string> = new Set(["keenable"]);
 const CONNECT_SERVICES: Readonly<Record<string, string>> = {
   agentcard: "mcp.agentcard.sh/mcp",
   vercel: "vercel",
@@ -130,14 +133,17 @@ for (const item of items) {
             ...(principalType === undefined ? [] : ["--principal-type", principalType]),
           ],
         };
-  const expectedSetups = slug in API_KEY_CONNECTIONS ? undefined : [expectedSetup];
+  const expectedSetups =
+    slug in API_KEY_CONNECTIONS || KEYLESS_CONNECTIONS.has(slug) ? undefined : [expectedSetup];
   if (JSON.stringify(setups) !== JSON.stringify(expectedSetups)) {
     throw new Error(
       slug in API_KEY_CONNECTIONS
         ? `Registry item "${item.name}" must not configure Vercel Connect for API-key authentication.`
-        : slug === "shopify"
-          ? 'Registry item "connection/shopify" must run eve integration setup shopify.'
-          : `Registry item "${item.name}" must configure its Vercel Connect connector through eve.`,
+        : KEYLESS_CONNECTIONS.has(slug)
+          ? `Registry item "${item.name}" must not configure Vercel Connect for a keyless connection.`
+          : slug === "shopify"
+            ? 'Registry item "connection/shopify" must run eve integration setup shopify.'
+            : `Registry item "${item.name}" must configure its Vercel Connect connector through eve.`,
     );
   }
 
@@ -164,6 +170,14 @@ for (const item of items) {
       break;
     }
     default: {
+      if (KEYLESS_CONNECTIONS.has(slug)) {
+        if (item.dependencies !== undefined || item.envVars !== undefined) {
+          throw new Error(
+            `Registry item "${item.name}" must not declare dependencies or environment variables because it needs no credential.`,
+          );
+        }
+        break;
+      }
       const requiredEnvVars = API_KEY_CONNECTIONS[slug];
       if (requiredEnvVars !== undefined) {
         if (

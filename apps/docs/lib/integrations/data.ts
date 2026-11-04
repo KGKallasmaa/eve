@@ -2422,6 +2422,37 @@ Keep the API key in a server-side environment variable. eve sends it directly to
     keywords: ["mcp", "models", "datasets", "spaces", "gradio", "ai", "oauth", "connect"],
     authModes: ["user"],
   },
+  keenable: {
+    logo: "keenable",
+    docsHref: "https://docs.keenable.ai",
+    keywords: ["mcp", "web search", "fetch", "markdown", "research", "keyless"],
+    authModes: [],
+    quickStart: `Create \`agent/connections/keenable.ts\`. The filename creates the \`keenable\` connection. Keenable's public MCP endpoint needs no account, and both tools (\`search_web_pages\` and \`fetch_page_content\`) are read-only, so this connection has no approval policy:
+
+\`\`\`ts
+import { defineMcpClientConnection } from "eve/connections";
+
+export default defineMcpClientConnection({
+  url: "https://api.keenable.ai/mcp-public",
+  description: "Keenable: search the web and fetch pages as clean markdown.",
+  headers: () => ({
+    "X-Keenable-Title": "eve",
+    ...(process.env.KEENABLE_API_KEY ? { "X-API-Key": process.env.KEENABLE_API_KEY } : {}),
+  }),
+});
+\`\`\`
+
+Without a key, calls are rate-limited per IP. When \`KEENABLE_API_KEY\` is set, eve sends it directly to Keenable and does not expose it to the model.`,
+    configure: `No configuration is required. Keyless calls are rate-limited per IP (1,000 requests per hour, 10 per second), which suits local development and templates.
+
+A busy or shared deployment should set an API key from [keenable.ai](https://keenable.ai) to lift the limit:
+
+\`\`\`bash
+KEENABLE_API_KEY=your_api_key
+\`\`\`
+
+See the [Connections docs](/docs/connections) for headers, approval, and protocol-specific filters.`,
+  },
   "local-falcon": {
     logo: "local-falcon",
     docsHref: "/docs/connections/mcp",

@@ -59,6 +59,32 @@ describe("Firecrawl connection setup", () => {
   });
 });
 
+describe("Keenable connection setup", () => {
+  it("works without a credential and keeps the API key optional", () => {
+    const integration = getIntegration("keenable")!;
+    const setup = buildConnectionSetup(integration);
+
+    expect(setup.authModes).toEqual([]);
+    expect(integration.quickStart).toContain('url: "https://api.keenable.ai/mcp-public"');
+    expect(integration.quickStart).toContain(
+      '...(process.env.KEENABLE_API_KEY ? { "X-API-Key": process.env.KEENABLE_API_KEY } : {})',
+    );
+    expect(integration.quickStart).not.toContain("@vercel/connect");
+    expect(integration.quickStart).not.toContain("approval:");
+    expect(integration.configure).toContain("KEENABLE_API_KEY=your_api_key");
+    expect(buildConnectionInstall(integration)).toContain("eve add connection/keenable");
+  });
+
+  it("shows the installed connection file in the gallery", () => {
+    const source = readFileSync(
+      new URL("../../registry/connections/keenable.ts", import.meta.url),
+      "utf8",
+    );
+
+    expect(getIntegration("keenable")!.quickStart).toContain(source.trim());
+  });
+});
+
 describe("Agentcard connection setup", () => {
   it("uses the standard connector name for the native Vercel Connect service", () => {
     const integration = getIntegration("agentcard")!;

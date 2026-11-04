@@ -1262,6 +1262,19 @@
       ]
     },
     {
+      "name": "connection/keenable",
+      "type": "registry:item",
+      "title": "Keenable",
+      "description": "Search the web and fetch pages as clean markdown, no account needed.",
+      "files": [
+        {
+          "path": "registry/connections/keenable.ts",
+          "type": "registry:file",
+          "target": "agent/connections/keenable.ts"
+        }
+      ]
+    },
+    {
       "name": "connection/local-falcon",
       "type": "registry:item",
       "title": "Local Falcon",

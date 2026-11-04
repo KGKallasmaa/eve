@@ -653,6 +653,17 @@ export const INTEGRATIONS: readonly IntegrationEntry[] = [
     },
   },
   {
+    slug: "keenable",
+    name: "Keenable",
+    kind: "connection",
+    tagline: "Search the web and fetch pages as clean markdown, no account needed.",
+    surfaces: { scaffoldable: false, registry: true, gallery: true },
+    connection: {
+      description: "Keenable: search the web and fetch pages as clean markdown.",
+      mcp: { url: "https://api.keenable.ai/mcp-public" },
+    },
+  },
+  {
     slug: "local-falcon",
     name: "Local Falcon",
     kind: "connection",
